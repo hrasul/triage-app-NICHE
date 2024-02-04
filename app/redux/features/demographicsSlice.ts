@@ -5,12 +5,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface DemographicsState {
   age: string | null;
   gender: 'Male' | 'Female' | null | string;
-  mi: boolean;
-  arrhythmia: boolean;
-  strokeOrTIA: { hadBefore: boolean; date: string | null };
-  htn: boolean;
-  dm: boolean;
-  smoking: boolean;
+  mi: 'Yes' | 'No' | 'Unknown';
+  arrhythmia: 'Yes' | 'No' | 'Unknown';
+  strokeOrTIA: { hadBefore: 'Yes' | 'No' | 'Unknown'; date: string | null };
+  htn: 'Yes' | 'No' | 'Unknown';
+  dm: 'Yes' | 'No' | 'Unknown';
+  smoking: 'Yes' | 'No' | 'Unknown';
   functionalStatus: 'independent' | 'partially dependent' | 'caregiver dependent' | string;
   codeStatus: 'Full' | 'DNR' | 'AMM' | 'DNI' | 'TBD' | string;
 }
@@ -18,12 +18,12 @@ interface DemographicsState {
 const initialState: DemographicsState = {
   age: null,
   gender: null,
-  mi: false,
-  arrhythmia: false,
-  strokeOrTIA: { hadBefore: false, date: null },
-  htn: false,
-  dm: false,
-  smoking: false,
+  mi: 'No',
+  arrhythmia: 'No',
+  strokeOrTIA: { hadBefore: 'No', date: null },
+  htn: "No",
+  dm: 'No',
+  smoking: 'No',
   functionalStatus: 'independent',
   codeStatus: 'Full',
 };

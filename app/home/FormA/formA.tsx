@@ -5,56 +5,76 @@ import * as Yup from "yup";
 import style from "./formA.module.scss";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { setDemographicData } from "@/app/redux/features/demographicsSlice";
-
+import ButtonCheck from '@mui/joy/Button';
+import IconButton from '@mui/joy/IconButton';
+import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import dynamic from 'next/dynamic';
-
 const BootstrapSwitchButton = dynamic(
   () => import('bootstrap-switch-button-react'),
   { ssr: false } // This line is important. It disables server-side rendering for the component.
 );
 
+
+
 export interface FormAProps {
   onNext: () => void;
+  
 }
 
 const FormA = (props: FormAProps) => {
   const dispatch = useDispatch();
+  const [values, setValues] = React.useState({
+    gender: 'Female',
+    mi: 'No',
+    arrhytmia: 'No',
+    stroke: 'No',
+    htn: 'No',
+    dm : 'No',
+    smoking : 'No'
 
+    // Add more fields as needed
+  });
   const demographicsData = useSelector(
     (state: RootState) => state.demographics
   );
+  const handleToggleChange = (fieldName: string, newValue: string | null) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      [fieldName]: newValue,
+    }));
+  }
 
   const validationSchema = Yup.object({
     // Define your fields and validation rules
     age: Yup.number().required("Age is required"),
     gender: Yup.string().required("Gender is required"),
-    mi: Yup.boolean(),
-    strokeOrTIA: Yup.object().shape({
-      hadBefore: Yup.boolean(),
-      // date: Yup.string().when("hadBefore", (hadBefore, schema) => {
-      //   return hadBefore
-      //     ? schema.required('Date is required when "Stroke or TIA" is checked')
-      //     : schema;
-      // }),
-    }),
+    // mi: Yup.string().required("Mi is required"),
+    // strokeOrTIA: Yup.object().shape({
+    //   hadBefore: Yup.boolean(),
+    //   // date: Yup.string().when("hadBefore", (hadBefore, schema) => {
+    //   //   return hadBefore
+    //   //     ? schema.required('Date is required when "Stroke or TIA" is checked')
+    //   //     : schema;
+    //   // }),
+    // }),
   });
-
+  
   // Formik hook
   const formik = useFormik({
     initialValues: {
       age: demographicsData.age || "",
       gender: demographicsData.gender || "",
-      mi: demographicsData.mi,
-      arrhythmia: demographicsData.arrhythmia,
+      mi: demographicsData.mi || "No",
+      arrhythmia: demographicsData.arrhythmia || "No",
       strokeOrTIA: demographicsData.strokeOrTIA || {
-        hadBefore: false,
+        hadBefore: "No",
         date: "",
       },
-      htn: demographicsData.htn,
-      dm: demographicsData.dm,
-      smoking: demographicsData.smoking,
+      htn: demographicsData.htn || "No",
+      dm: demographicsData.dm || "No",
+      smoking: demographicsData.smoking || "No",
       functionalStatus: demographicsData.functionalStatus || "independent",
       codeStatus: demographicsData.codeStatus || "Full",
     },
@@ -89,23 +109,25 @@ const FormA = (props: FormAProps) => {
         </Row>
 
         <Row className="py-2">
-          <Col md={3} className={`${style.inputWrapper} ${style.inputLabel}`}>
+          <Col xs md={3} className={`${style.inputWrapper} ${style.inputLabel}`}>
             <label htmlFor="gender">Gender :</label>
           </Col>
-          <Col md={6}>
-            <select
-              name="gender"
-              onChange={formik.handleChange}
-              value={formik.values.gender}
-              className={`${style.formInput}`}
-            >
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Others">Others</option>
-            </select>
+          <Col  md={6} xs>
+          <ToggleButtonGroup
+          color="primary"
+          value={values.gender}
+          onChange={(event, newValue) => {
+            handleToggleChange('gender', newValue);
+            formik.handleChange;
+            formik.setFieldValue('gender', newValue);
+           }}
+          > 
+          <ButtonCheck value="Male">Male</ButtonCheck>
+          <ButtonCheck value="Female">Female</ButtonCheck>
+          <ButtonCheck value="Others">Others</ButtonCheck>
+          </ToggleButtonGroup> 
           </Col>
-          <p className={` error color-red`}>{formik?.errors?.gender}</p>
+          {/* <p className={` error color-red`}>{formik?.errors?.gender}</p> */}
         </Row>
 
 
@@ -118,15 +140,19 @@ const FormA = (props: FormAProps) => {
             <label htmlFor="MI">Myocardial Infarction:</label>
           </Col>
           <Col md={6} xs>
-          <BootstrapSwitchButton
-          checked={formik.values.mi}
-          onChange={(checked) => {
-            formik.setFieldValue("mi", checked);
-          }}
-          onlabel='Yes'
-          offlabel='No'
-          width={100}
-        />
+          <ToggleButtonGroup
+          color="primary"
+          value={values.mi}
+          onChange={(event, newValue) => {
+            handleToggleChange('mi', newValue);
+            formik.handleChange;
+            formik.setFieldValue('mi', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          </ToggleButtonGroup> 
           </Col>
           <p className={`error color-red`}>{formik?.errors?.mi}</p>
         </Row>
@@ -140,15 +166,19 @@ const FormA = (props: FormAProps) => {
             <label htmlFor="arrhythmia">Arrhythmia :</label>
           </Col>
           <Col xs md={6}>
-          <BootstrapSwitchButton
-            checked={formik.values.arrhythmia}
-            onChange={(checked) => {
-              formik.setFieldValue("arrhythmia", checked);
-            }}
-            onlabel='Yes'
-            offlabel='No'
-            width={100}
-        />{" "}
+          <ToggleButtonGroup
+          color="primary"
+          value={values.arrhytmia}
+          onChange={(event, newValue) => {
+            handleToggleChange('arrhytmia', newValue);
+            formik.handleChange;
+            formik.setFieldValue('arrhythmia', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          </ToggleButtonGroup> 
           </Col>
           <p className={`error color-red`}>{formik?.errors?.arrhythmia}</p>
         </Row>
@@ -164,22 +194,26 @@ const FormA = (props: FormAProps) => {
             </label>
           </Col>
           <Col xs md={6}>
-          <BootstrapSwitchButton
-            checked={formik.values.strokeOrTIA.hadBefore}
-            onChange={(checked) => {
-              formik.setFieldValue("strokeOrTIA.hadBefore", checked);
-            }}
-            onlabel='Yes'
-            offlabel='No'
-            width={100}
-        />
+          <ToggleButtonGroup
+          color="primary"
+          value={values.stroke}
+          onChange={(event, newValue) => {
+            handleToggleChange('stroke', newValue);
+            formik.handleChange;
+            formik.setFieldValue('strokeOrTIA.hadBefore', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          </ToggleButtonGroup> 
           </Col>
           <p className={`error color-red`}>
             {formik?.errors?.strokeOrTIA?.hadBefore}
           </p>
         </Row>
 
-        {formik.values.strokeOrTIA.hadBefore && (
+        {formik.values.strokeOrTIA.hadBefore === "Yes" && (
           <Row className="py-2">
             <Col md={3} className={`${style.inputWrapper} ${style.inputLabel} px-4`}>
               <label htmlFor="strokeOrTIADate">Date of Stroke/TIA:</label>
@@ -207,15 +241,19 @@ const FormA = (props: FormAProps) => {
             <label htmlFor="htn">HTN:</label>
           </Col>
           <Col xs md={6}>
-          <BootstrapSwitchButton
-            checked={formik.values.htn}
-            onChange={(checked) => {
-              formik.setFieldValue("htn", checked);
-            }}
-            onlabel='Yes'
-            offlabel='No'
-            width={100}
-        />
+          <ToggleButtonGroup
+          color="primary"
+          value={values.htn}
+          onChange={(event, newValue) => {
+            handleToggleChange('htn', newValue);
+            formik.handleChange;
+            formik.setFieldValue('htn', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          </ToggleButtonGroup> 
           </Col>
         </Row>
 
@@ -225,15 +263,19 @@ const FormA = (props: FormAProps) => {
             <label htmlFor="dm">DM:</label>
           </Col>
           <Col xs md={6}>
-          <BootstrapSwitchButton
-            checked={formik.values.dm}
-            onChange={(checked) => {
-              formik.setFieldValue("dm", checked);
-            }}
-            onlabel='Yes'
-            offlabel='No'
-            width={100}
-        />
+          <ToggleButtonGroup
+          color="primary"
+          value={values.dm}
+          onChange={(event, newValue) => {
+            handleToggleChange('dm', newValue);
+            formik.handleChange;
+            formik.setFieldValue('dm', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          </ToggleButtonGroup> 
           </Col>
         </Row>
 
@@ -243,15 +285,19 @@ const FormA = (props: FormAProps) => {
             <label htmlFor="smoking">Smoking:</label>
           </Col>
           <Col xs md={6}>
-          <BootstrapSwitchButton
-            checked={formik.values.smoking}
-            onChange={(checked) => {
-              formik.setFieldValue("smoking", checked);
-            }}
-            onlabel='Yes'
-            offlabel='No'
-            width={100}
-        />
+          <ToggleButtonGroup
+          color="primary"
+          value={values.smoking}
+          onChange={(event, newValue) => {
+            handleToggleChange('smoking', newValue);
+            formik.handleChange;
+            formik.setFieldValue('smoking', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          </ToggleButtonGroup> 
           </Col>
         </Row>
 
@@ -260,7 +306,7 @@ const FormA = (props: FormAProps) => {
           <Col xs md={3} className={`${style.inputWrapper} ${style.inputLabel}`}>
             <label htmlFor="functionalStatus">Functional Status:</label>
           </Col>
-          <Col md={6}>
+          <Col xs md={6}>
             <select
               name="functionalStatus"
               onChange={formik.handleChange}
