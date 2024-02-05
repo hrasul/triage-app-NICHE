@@ -23,7 +23,7 @@ const ResultPage = () => {
   const generatePDF = () => {
     const input = document.getElementById("report");
 
-    html2canvas(input)
+    html2canvas(input!)
       .then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
         const canvasWidth = canvas.width;
