@@ -39,7 +39,7 @@ export default function TriageHome() {
           {formStage === "A" && <FormA onNext={goToNextForm} />}{" "}
           {formStage === "B" && <FormB onNext={goToNextForm} onBack={goBack} />}
           {formStage === "C" && <FormC onNext={goToNextForm} onBack={goBack} />}
-          {formStage === "D" && <ResultPage onNext={finishForms} onBack={goBack} />}
+          {/* {formStage === "D" && <ResultPage onNext={finishForms} onBack={goBack} />} */}
         </ReduxProvider>
       </Container>
     </>
