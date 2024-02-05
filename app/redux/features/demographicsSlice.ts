@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DemographicsState {
   age: string | null;
-  gender: 'Male' | 'Female' | null | string;
+  gender: 'Male' | 'Female' | 'Others' | string;
   mi: 'Yes' | 'No' | 'Unknown';
   arrhythmia: 'Yes' | 'No' | 'Unknown';
   strokeOrTIA: { hadBefore: 'Yes' | 'No' | 'Unknown'; date: string | null };
@@ -17,7 +17,7 @@ interface DemographicsState {
 
 const initialState: DemographicsState = {
   age: null,
-  gender: null,
+  gender: 'Female',
   mi: 'No',
   arrhythmia: 'No',
   strokeOrTIA: { hadBefore: 'No', date: null },
