@@ -5,7 +5,7 @@ import { useState } from "react";
 import FormA from "./FormA/formA";
 import FormB from "./FormB/formB";
 import FormC from "./FormC/formC";
-import ResultPage from "./results/page";
+import ResultPage from "./results/results";
 import ReduxProvider from "../redux/features/reduxProvider";
 
 export default function TriageHome() {
@@ -39,7 +39,7 @@ export default function TriageHome() {
           {formStage === "A" && <FormA onNext={goToNextForm} />}{" "}
           {formStage === "B" && <FormB onNext={goToNextForm} onBack={goBack} />}
           {formStage === "C" && <FormC onNext={goToNextForm} onBack={goBack} />}
-          {/* {formStage === "D" && <ResultPage onNext={finishForms} onBack={goBack} />} */}
+          {formStage === "D" && <ResultPage/>}
         </ReduxProvider>
       </Container>
     </>
