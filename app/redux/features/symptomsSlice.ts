@@ -4,20 +4,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SymptomsState {
   dateTime: string;
-  weakness: { hasWeakness: boolean; side: 'Right' | 'Left' | '' };
-  aphasia: boolean;
-  facialdrool: boolean;
-  visualSymptoms: boolean;
+  weakness: { hasWeakness: 'Yes' | 'No' | 'Unknown'; side: 'Right' | 'Left' | '' };
+  aphasia: 'Yes' | 'No' | 'Unknown';
+  facialdrool: 'Yes' | 'No' | 'Unknown';
+  visualSymptoms: 'Yes' | 'No' | 'Unknown';
   durationOfSymptoms: string;
   resolutionOfSymptoms: 'complete' | 'partial' | 'none';
 }
 
 const initialState: SymptomsState = {
   dateTime: '',
-  weakness: { hasWeakness: false, side: "" },
-  aphasia: false,
-  facialdrool: false,
-  visualSymptoms: false,
+  weakness: { hasWeakness: 'Yes', side: "" },
+  aphasia: 'No',
+  facialdrool: 'No',
+  visualSymptoms: 'No',
   durationOfSymptoms: '',
   resolutionOfSymptoms: 'none',
 };

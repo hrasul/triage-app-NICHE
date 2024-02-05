@@ -5,6 +5,9 @@ import * as Yup from "yup";
 import DatePicker from 'react-datepicker';
 import { setSymptomsData } from "@/app/redux/features/symptomsSlice";
 import style from "./formB.module.scss";
+import ButtonCheck from '@mui/joy/Button';
+import IconButton from '@mui/joy/IconButton';
+import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
@@ -23,7 +26,14 @@ export interface FormBProps {
 const FormB = (props: FormBProps) => {
   // Form validation schema
   const dispatch = useDispatch();
-
+  const [values, setValues] = React.useState({
+    aphasia: 'No',
+    facialdrool: 'No',
+    visualSymptoms: 'No',
+    weakness:'No',
+    side: 'No'
+    // Add more fields as needed
+  });
   const symptopData = useSelector(
     (state: RootState) => state.symptoms
   );
@@ -33,11 +43,11 @@ const FormB = (props: FormBProps) => {
     //   .required('Date is required')
     //   .nullable(),
     weakness: Yup.object().required("Wekaness is Required"),
-    aphasia: Yup.boolean()
+    aphasia: Yup.string()
       .required('Aphasia field is required'),
-    facialdrool: Yup.boolean()
+    facialdrool: Yup.string()
       .required('Facial drool field is required'),
-    visualSymptoms: Yup.boolean()
+    visualSymptoms: Yup.string()
       .required('Visual symptoms field is required'),
     durationOfSymptoms: Yup.string()
       .required('Duration of symptoms is required'),
@@ -50,10 +60,10 @@ const FormB = (props: FormBProps) => {
     initialValues: {
       // ... initial values for FormB fields
       dateTime: symptopData.dateTime,
-      weakness: symptopData.weakness || { hasWeakness: false, side: '' },
-      aphasia: symptopData.aphasia,
-      facialdrool: symptopData.facialdrool,
-      visualSymptoms: symptopData.visualSymptoms,
+      weakness: symptopData.weakness || { hasWeakness: 'No', side: '' },
+      aphasia: symptopData.aphasia || "",
+      facialdrool: symptopData.facialdrool || "",
+      visualSymptoms: symptopData.visualSymptoms || "",
       durationOfSymptoms: symptopData.durationOfSymptoms || "",
       resolutionOfSymptoms: symptopData.resolutionOfSymptoms || '',
     },
@@ -63,7 +73,14 @@ const FormB = (props: FormBProps) => {
       console.log(values);
       props.onNext(); // Proceed to next form
     },
+    
   });
+  const handleToggleChange = (fieldName: string, newValue: string | null) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      [fieldName]: newValue,
+    }));
+  }
 
   return (
     <Container className={`${style.formInputWrapper} text-center`}>
@@ -100,40 +117,44 @@ const FormB = (props: FormBProps) => {
             <label htmlFor="weakness.hasWeakness">Weakness:</label>
           </Col>
           <Col xs md={6}>
-          <BootstrapSwitchButton
-            checked={formik.values.weakness.hasWeakness}
-            onChange={(checked) => {
-              formik.setFieldValue("weakness.hasWeakness", checked);
-            }}
-            onlabel='Yes'
-            offlabel='No'
-            width={100}
-        />
+          <ToggleButtonGroup
+          color="primary"
+          value={values.weakness}
+          onChange={(event, newValue) => {
+            handleToggleChange('weakness', newValue);
+            formik.handleChange;
+            formik.setFieldValue('weakness.hasWeakness', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
+          </ToggleButtonGroup>
           </Col>
           <p className={`error color-red`}>
             {formik.errors?.weakness?.hasWeakness}
           </p>
         </Row>
-        {formik.values.weakness.hasWeakness && (
+        {formik.values.weakness.hasWeakness === 'Yes' && (
           <Row className="py-2">
             <Col md={3} className={`${style.inputWrapper} ${style.inputLabel}`}>
               <label htmlFor="weakness-side">Side of Weakness:</label>
             </Col>
             <Col xs md={6}>
-              <select
-                name="weakness.side"
-                id="side"
-                value={formik.values.weakness.side}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`${style.formInput}`}
-
-              >
-                <option value="string">Select an option</option>
-                <option value="Left">Left</option>
-                <option value="Right">Right</option>
-
-              </select>
+            <ToggleButtonGroup
+          color="primary"
+          value={values.side}
+          onChange={(event, newValue) => {
+            handleToggleChange('side', newValue);
+            formik.handleChange;
+            formik.setFieldValue('weakness.side', newValue);
+           }}
+          > 
+          <ButtonCheck value="Right">Right</ButtonCheck>
+          <ButtonCheck value="Left">Left</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
+          
+          </ToggleButtonGroup>
             </Col>
             <p className={`error color-red`}>
               {formik.errors?.weakness?.side}
@@ -148,16 +169,21 @@ const FormB = (props: FormBProps) => {
             <label htmlFor="aphasia">Aphasia:</label>
           </Col>
           <Col xs md={6}>
-          <BootstrapSwitchButton
-            checked={formik.values.aphasia}
-            onChange={(checked) => {
-              formik.setFieldValue("aphasia", checked);
-            }}
-            onlabel='Yes'
-            offlabel='No'
-            width={100}
-        />
+          <ToggleButtonGroup
+          color="primary"
+          value={values.aphasia}
+          onChange={(event, newValue) => {
+            handleToggleChange('aphasia', newValue);
+            formik.handleChange;
+            formik.setFieldValue('aphasia', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
+          </ToggleButtonGroup>
           </Col>
+          
           <p className={`error color-red`}>
             {formik.errors.aphasia}
           </p>
@@ -168,15 +194,19 @@ const FormB = (props: FormBProps) => {
             <label htmlFor="facialdrool">Facial Drool:</label>
           </Col>
           <Col xs md={6}>
-          <BootstrapSwitchButton
-            checked={formik.values.facialdrool}
-            onChange={(checked) => {
-              formik.setFieldValue("facialdrool", checked);
-            }}
-            onlabel='Yes'
-            offlabel='No'
-            width={100}
-        />
+          <ToggleButtonGroup
+          color="primary"
+          value={values.facialdrool}
+          onChange={(event, newValue) => {
+            handleToggleChange('facialdrool', newValue);
+            formik.handleChange;
+            formik.setFieldValue('aphasia', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
+          </ToggleButtonGroup>
           </Col>
           <p className={`error color-red`}>
             {formik.errors.facialdrool}
@@ -188,15 +218,19 @@ const FormB = (props: FormBProps) => {
             <label htmlFor="visualSymptoms">Visual Symptoms:</label>
           </Col>
           <Col xs md={6}>
-          <BootstrapSwitchButton
-            checked={formik.values.visualSymptoms}
-            onChange={(checked) => {
-              formik.setFieldValue("visualSymptoms", checked);
-            }}
-            onlabel='Yes'
-            offlabel='No'
-            width={100}
-        />
+          <ToggleButtonGroup
+          color="primary"
+          value={values.visualSymptoms}
+          onChange={(event, newValue) => {
+            handleToggleChange('visualSymptoms', newValue);
+            formik.handleChange;
+            formik.setFieldValue('visualSymptoms', newValue);
+           }}
+          > 
+          <ButtonCheck value="Yes">Yes</ButtonCheck>
+          <ButtonCheck value="No">No</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
+          </ToggleButtonGroup>
           </Col>
           <p className={`error color-red`}>
             {formik.errors.visualSymptoms}

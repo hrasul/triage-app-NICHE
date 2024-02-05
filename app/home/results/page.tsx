@@ -61,22 +61,22 @@ const ResultPage = (props: ResultPageprops) => {
           <strong>Gender:</strong> {demographicsData.gender ? demographicsData.gender : 'Not provided'}
         </div>
         <div>
-          <strong>Myocardial Infarction History:</strong> {demographicsData.mi ? 'Yes' : 'No'}
+          <strong>Myocardial Infarction History:</strong> {demographicsData.mi ? demographicsData.mi : 'Not provided'}
         </div>
         <div>
-          <strong>Arrhythmia:</strong> {demographicsData.arrhythmia ? 'Yes' : 'No'}
+          <strong>Arrhythmia:</strong> {demographicsData.arrhythmia ? demographicsData.arrhythmia : 'Not provided'}
         </div>
         <div>
-          <strong>History of Stroke/TIA:</strong> {demographicsData.strokeOrTIA.hadBefore ? `Yes, on ${demographicsData.strokeOrTIA.date}` : 'No'}
+          <strong>History of Stroke/TIA:</strong> {demographicsData.strokeOrTIA.hadBefore === 'Yes' ? `Yes, on ${demographicsData.strokeOrTIA.date}` : 'No'}
         </div>
         <div>
-          <strong>Hypertension:</strong> {demographicsData.htn ? 'Yes' : 'No'}
+          <strong>Hypertension:</strong> {demographicsData.htn ? demographicsData.htn : 'Not provided'}
         </div>
         <div>
-          <strong>Diabetes Mellitus:</strong> {demographicsData.dm ? 'Yes' : 'No'}
+          <strong>Diabetes Mellitus:</strong> {demographicsData.dm ? demographicsData.dm : 'Not provided'}
         </div>
         <div>
-          <strong>Smoking:</strong> {demographicsData.smoking ? 'Yes' : 'No'}
+          <strong>Smoking:</strong> {demographicsData.smoking ? demographicsData.smoking : 'Not provided'}
         </div>
         <div>
           <strong>Functional Status:</strong> {demographicsData.functionalStatus ? demographicsData.functionalStatus : 'Not provided'}
@@ -93,16 +93,16 @@ const ResultPage = (props: ResultPageprops) => {
             <strong>Date & Time of Onset:</strong> {symptomData.dateTime ? symptomData.dateTime : 'Not provided'}
           </div>
           <div>
-            <strong>Weakness:</strong> {symptomData.weakness.hasWeakness ? `Yes, ${symptomData.weakness.side} side` : 'No'}
+            <strong>Weakness:</strong> {symptomData.weakness.hasWeakness === 'Yes' ? `Yes, ${symptomData.weakness.side} side` : 'No'}
           </div>
           <div>
-            <strong>Aphasia:</strong> {symptomData.aphasia ? 'Yes' : 'No'}
+            <strong>Aphasia:</strong> {symptomData.aphasia ? symptomData.aphasia : 'Not provided'}
           </div>
           <div>
-            <strong>Facial Drool:</strong> {symptomData.facialdrool ? 'Yes' : 'No'}
+            <strong>Facial Droop:</strong> {symptomData.facialdrool ? symptomData.facialdrool : 'Not provided'}
           </div>
           <div>
-            <strong>Visual Symptoms:</strong> {symptomData.visualSymptoms ? 'Yes' : 'No'}
+            <strong>Visual Symptoms:</strong> {symptomData.visualSymptoms ? symptomData.visualSymptoms : 'Not provided'}
           </div>
           <div>
             <strong>Duration of Symptoms:</strong> {symptomData.durationOfSymptoms ? symptomData.durationOfSymptoms : 'Not provided'}
@@ -136,27 +136,41 @@ const ResultPage = (props: ResultPageprops) => {
       <Col xs={12}>
     <h2>Consultation</h2>
       {/* Vascular Consultation Logic */}
-      {investigationData.ctaCarotidDisease && (
-        <div>
-          <strong>Vascular Surgery Consultation:</strong> Required
-        </div>
-      )}
-        {investigationData.ctHead.hemorrhage || symptomData.resolutionOfSymptoms === 'none' ? (
-        <div>
-          <strong>Neurology Consultation:</strong> Required
-        </div>
-      ) : (
-        <div>
-          <strong>Neurology Consultation:</strong> Not Required
-        </div>
-      )}
+      {investigationData.ctaCarotidDisease && !investigationData.ctHead.hemorrhage && (
+  <div>
+    <strong>Vascular Surgery Consultation:</strong> Required (Priority)
+  </div>
+)}
 
-      {/* Cardiology Consultation Logic */}
-      {investigationData.ecgAtrialFibrillation && (
-        <div>
-          <strong>Cardiology Consultation:</strong> Required
-        </div>
-      )}
+{/* Neurology Consultation Logic */}
+{investigationData.ctHead.hemorrhage && (
+  <div>
+    <strong>Neurology Consultation:</strong> Required (Priority)
+  </div>
+)}
+
+{symptomData.resolutionOfSymptoms === 'none'  || (!investigationData.ctHead.infarction && !investigationData.ctaCarotidDisease && !investigationData.ecgAtrialFibrillation) &&  (
+  <div>
+    <strong>Neurology Consultation:</strong> Required
+  </div>
+)}
+
+{/* Cardiology Consultation Logic */}
+
+
+{(demographicsData.arrhythmia === 'Yes' || investigationData.ecgAtrialFibrillation) && !investigationData.ctHead.hemorrhage &&  (
+  <div>
+    <strong>Cardiology Consultation:</strong> Required
+  </div>
+)}
+
+{/* Default Neurology Consultation */}
+{!investigationData.ctHead.hemorrhage && symptomData.resolutionOfSymptoms !== 'none' && (
+  <div>
+    <strong>Neurology Consultation:</strong> Not Required
+  </div>
+)}
+
       </Col>
     </Row>
     <Row>

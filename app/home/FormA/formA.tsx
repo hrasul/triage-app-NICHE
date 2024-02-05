@@ -92,11 +92,11 @@ const FormA = (props: FormAProps) => {
         Demographics and Past Medical History
       </h1>
       <form onSubmit={formik.handleSubmit}>
-        <Row className="py-2">
-          <Col md={3} className={`${style.inputWrapper} ${style.inputLabel}`}>
+        <Row  className={`${style.sexyRow}`}>
+          <Col md={3} xs={3} className={`${style.inputWrapper} ${style.inputLabel}`}>
             <label htmlFor="age">Age :</label>
           </Col>
-          <Col md={6}>
+          <Col md={6} xs={6}>
             <input
               type="number"
               name="age"
@@ -151,7 +151,7 @@ const FormA = (props: FormAProps) => {
           > 
           <ButtonCheck value="Yes">Yes</ButtonCheck>
           <ButtonCheck value="No">No</ButtonCheck>
-          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
           </ToggleButtonGroup> 
           </Col>
           <p className={`error color-red`}>{formik?.errors?.mi}</p>
@@ -177,7 +177,7 @@ const FormA = (props: FormAProps) => {
           > 
           <ButtonCheck value="Yes">Yes</ButtonCheck>
           <ButtonCheck value="No">No</ButtonCheck>
-          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
           </ToggleButtonGroup> 
           </Col>
           <p className={`error color-red`}>{formik?.errors?.arrhythmia}</p>
@@ -205,7 +205,7 @@ const FormA = (props: FormAProps) => {
           > 
           <ButtonCheck value="Yes">Yes</ButtonCheck>
           <ButtonCheck value="No">No</ButtonCheck>
-          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
           </ToggleButtonGroup> 
           </Col>
           <p className={`error color-red`}>
@@ -252,7 +252,7 @@ const FormA = (props: FormAProps) => {
           > 
           <ButtonCheck value="Yes">Yes</ButtonCheck>
           <ButtonCheck value="No">No</ButtonCheck>
-          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
           </ToggleButtonGroup> 
           </Col>
         </Row>
@@ -296,7 +296,7 @@ const FormA = (props: FormAProps) => {
           > 
           <ButtonCheck value="Yes">Yes</ButtonCheck>
           <ButtonCheck value="No">No</ButtonCheck>
-          <ButtonCheck value="Undefined">N.A</ButtonCheck>
+          <ButtonCheck value="Unknown">N.A</ButtonCheck>
           </ToggleButtonGroup> 
           </Col>
         </Row>
@@ -321,11 +321,11 @@ const FormA = (props: FormAProps) => {
         </Row>
 
         {/* Code Status Field */}
-        <Row className="py-2">
-          <Col md={3} className={`${style.inputWrapper} ${style.inputLabel}`}>
+        <Row className={`${style.sexyRow}`}>
+          <Col md={3} xs={5} className={`${style.inputWrapper} ${style.inputLabel}`}>
             <label htmlFor="codeStatus">Code Status:</label>
           </Col>
-          <Col md={6}>
+          <Col md={6} xs={6}>
             <select
               name="codeStatus"
               onChange={formik.handleChange}
