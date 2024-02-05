@@ -7,10 +7,8 @@ import html2canvas from "html2canvas";
 import { RootState } from "@/app/redux/store";
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
-// export interface ResultPageProps {
-//   onNext: () => void;
-//   onBack: () => void;
-// }
+
+
 const ResultPage = () => {
   // Form validation schema
   const investigationData = useSelector(
